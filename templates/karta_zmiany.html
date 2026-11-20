@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Karta zmiany {{Sygnatura}}</title>
+<!--
+  Wydruk karty zmiany (HTML + CSS, format A4).
+  Znaczniki {{...}} zastępuje się wartościami pól formularza przy generowaniu wydruku.
+-->
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2b2e; font-size: 10pt; line-height: 1.45; margin: 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1.5pt solid #1f2b2e; padding-bottom: 3mm; }
+  h1 { font-size: 15pt; margin: 0; }
+  .meta { text-align: right; font-size: 9pt; color: #555; }
+  .klasa { display: inline-block; padding: 1mm 3mm; border: 1pt solid currentColor; font-weight: 600; }
+  .klasa-Krytyczna { color: #a1251b; } .klasa-Poważna { color: #8a5a00; } .klasa-Mniejsza { color: #1f6b33; }
+  section { margin-top: 6mm; break-inside: avoid; }
+  h2 { font-size: 11pt; margin: 0 0 2mm; padding-bottom: 1mm; border-bottom: 0.5pt solid #c8cfd1; }
+  dl { display: grid; grid-template-columns: 45mm 1fr 40mm 1fr; gap: 1.5mm 4mm; margin: 0; }
+  dt { color: #555; } dd { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  th, td { border: 0.5pt solid #c8cfd1; padding: 1.5mm 2mm; text-align: left; vertical-align: top; }
+  th { background: #f1f3f4; }
+  .podpisy { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8mm; margin-top: 12mm; font-size: 9pt; }
+  .podpis { border-top: 0.6pt solid #1f2b2e; padding-top: 1.5mm; }
+  footer { margin-top: 8mm; font-size: 8pt; color: #666; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Karta zmiany</h1>
+    <span class="klasa klasa-{{Klasyfikacja}}">{{Klasyfikacja}}</span>
+  </div>
+  <div class="meta">
+    <strong>{{Sygnatura}}</strong><br>
+    Status: {{Krok}}<br>
+    Wydruk: {{DataWydruku}}, {{Drukujacy}}
+  </div>
+</header>
+
+<section>
+  <h2>Wniosek</h2>
+  <dl>
+    <dt>Tytuł</dt><dd>{{Tytul}}</dd>
+    <dt>Typ zmiany</dt><dd>{{TypZmiany}}</dd>
+    <dt>Inicjator</dt><dd>{{Inicjator}}</dd>
+    <dt>Data wniosku</dt><dd>{{DataWniosku}}</dd>
+    <dt>Produkty / linie</dt><dd>{{ProduktyLinie}}</dd>
+    <dt>Powiązane odchylenie</dt><dd>{{PowiazaneOdchylenie}}</dd>
+  </dl>
+  <p><strong>Stan obecny:</strong> {{StanObecny}}</p>
+  <p><strong>Proponowana zmiana:</strong> {{ProponowanaZmiana}}</p>
+  <p><strong>Uzasadnienie:</strong> {{Uzasadnienie}}</p>
+</section>
+
+<section>
+  <h2>Ocena wpływu</h2>
+  <table>
+    <thead><tr><th>Dział</th><th>Wpływ</th><th>Opis</th><th>Data</th></tr></thead>
+    <tbody>{{WierszeOcenyWplywu}}</tbody>
+  </table>
+  <p>Wymaga zgłoszenia do urzędu: <strong>{{WymagaZgloszenia}}</strong> · Status zgody: {{ZgodaRejestracyjna}}</p>
+</section>
+
+<section>
+  <h2>Zadania wdrożeniowe</h2>
+  <table>
+    <thead><tr><th>Zadanie</th><th>Właściciel</th><th>Termin</th><th>Status</th><th>Wykonano</th></tr></thead>
+    <tbody>{{WierszeZadan}}</tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Weryfikacja skuteczności</h2>
+  <dl>
+    <dt>Kryterium</dt><dd>{{KryteriumSkutecznosci}}</dd>
+    <dt>Wynik</dt><dd>{{WynikSkutecznosci}}</dd>
+  </dl>
+</section>
+
+<div class="podpisy">
+  <div class="podpis">Kierownik QA<br>{{ZatwierdzilQA}}, {{DataZatwierdzenia}}</div>
+  <div class="podpis">Dyrektor zakładu (zmiany krytyczne)<br>{{ZatwierdzilDyrektor}}</div>
+  <div class="podpis">Zamknięcie<br>{{ZamknalLogin}}, {{DataZamkniecia}}</div>
+</div>
+
+<footer>Dokument wygenerowany z obiegu „Kontrola zmian” (WEBCON BPS). Dane fikcyjne w wersji demonstracyjnej.</footer>
+</body>
+</html>
