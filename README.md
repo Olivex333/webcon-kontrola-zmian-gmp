@@ -4,7 +4,33 @@ Projekt aplikacji procesowej pod platformę low-code **WEBCON BPS**: obsługa pl
 
 Obieg prowadzi wniosek przez klasyfikację, ocenę wpływu kilku działów naraz (produkcja, kontrola jakości, walidacja, sprawy rejestracyjne), zatwierdzenie, realizację zadań i sprawdzenie skuteczności. Projekt łączy się z repozytorium [`webcon-odchylenia-capa-gmp`](https://github.com/olivex333/webcon-odchylenia-capa-gmp): działanie CAPA, które wymaga zmiany procesu lub dokumentu, otwiera wniosek o zmianę.
 
-> **Status projektu.** Repozytorium zawiera projekt procesu, skrypty T-SQL (słowniki, rejestr, oceny wpływu, zadania, ślad audytowy, dane testowe, raporty), szablon wydruku karty zmiany (HTML/CSS) i scenariusze testowe. Konfiguracja w WEBCON BPS Designer Studio jest kolejnym krokiem. Projekt nie jest systemem zwalidowanym.
+> **Status projektu.** Etap 1 jest zbudowany i przetestowany w WEBCON BPS 2026.2 (środowisko trial): uproszczony obieg z 5 krokami, opisany niżej, ze zrzutami ekranu. Pełny projekt (7 kroków, równoległa ocena wpływu, zgoda rejestracyjna) jest opisany w dokumentacji i skryptach T-SQL jako kolejne etapy. Projekt nie jest systemem zwalidowanym.
+
+## Etap 1: zbudowane w WEBCON BPS
+
+Aplikacja **Kontrola zmian GMP**, proces **Kontrola zmian**, formularz **Wniosek o zmianę** z sygnaturą `CC/{rok}/{miesiąc}/{numer}`.
+
+| Krok | Typ | Ścieżki | Pola na formularzu |
+| --- | --- | --- | --- |
+| Wniosek | start | Wyślij → Ocena QA | Tytuł zmiany, Opis zmiany, Uzasadnienie: wymagane; pola QA ukryte |
+| Ocena QA | pośredni | Zatwierdź → Realizacja, Do poprawy → Wniosek (do autora), Odrzuć → Odrzucone | pola wniosku tylko do odczytu; Klasyfikacja (Mała / Duża) i Termin realizacji wymagane; Komentarz QA |
+| Realizacja | pośredni | Zakończ → Zamknięte | wszystko tylko do odczytu |
+| Zamknięte | końcowy pozytywny | – | tylko do odczytu |
+| Odrzucone | końcowy negatywny | – | tylko do odczytu |
+
+- **Klasyfikacja** to pole wyboru ze źródłem danych „Klasy zmian” (stała lista wartości: `MALA` / Mała, `DUZA` / Duża).
+- Ścieżki **Odrzuć** i **Do poprawy** wymagają komentarza i nie wymuszają wypełnienia pól oceny, bo przy odrzuceniu termin realizacji nie ma sensu.
+
+**Przetestowane scenariusze:**
+
+1. Wniosek „Zmiana dostawcy folii opakowaniowej” → Wyślij → Zatwierdź (Mała, termin 05.12.2026) → Zakończ. Wynik: `CC/2026/11/00001` w kroku Zamknięte.
+2. Wniosek „Zmiana temperatury zgrzewania na linii 2” → Wyślij → Odrzuć bez komentarza. Wynik: błąd „Komentarz jest wymagany na ścieżce: Odrzuć”. Po dopisaniu komentarza → Odrzuć: `CC/2026/11/00002` w kroku Odrzucone.
+
+![Schemat obiegu w Portalu WEBCON](docs/screenshots/00_schemat_obiegu.png)
+
+![Wniosek CC/2026/11/00001 w kroku Zamknięte](docs/screenshots/01_wniosek_zamkniety.png)
+
+![Wniosek CC/2026/11/00002 odrzucony z komentarzem](docs/screenshots/02_wniosek_odrzucony.png)
 
 ## Zawartość
 
@@ -93,17 +119,19 @@ Klasyfikacja zależy od wpływu na jakość produktu i bezpieczeństwo pacjenta,
 - Średni czas od wniosku do zamknięcia według klasy
 - Odsetek zmian wymagających zgłoszenia do urzędu
 
-## Konfiguracja w WEBCON BPS (kolejne kroki)
+## Konfiguracja w WEBCON BPS: kolejne etapy
+
+- [x] Etap 1: aplikacja, proces, formularz, 5 kroków, 5 ścieżek, pola wymagane, test dwóch scenariuszy, zrzuty ekranu
 
 - [ ] Skrypty `sql/01`–`03` na bazie pomocniczej, źródło danych w WEBCON
 - [ ] Aplikacja, proces i obieg z `docs/obieg.md`, w tym zadania równoległe oceny wpływu
 - [ ] Pola, listy pozycji, reguły 1–6, uprawnienia i powiadomienia
 - [ ] Raporty w Portalu na podstawie `sql/04_raporty.sql`
-- [ ] Scenariusze z `tests/scenariusze_testowe.md` i zrzuty ekranu
+- [ ] Pozostałe scenariusze z `tests/scenariusze_testowe.md`
 
 ## Technologie
 
-WEBCON BPS (projekt procesu) · T-SQL (Microsoft SQL Server) · HTML/CSS · Mermaid · narzędzia AI do przeglądu, testów i dokumentacji
+WEBCON BPS 2026.2 (Designer Studio, Portal) · T-SQL (Microsoft SQL Server) · HTML/CSS · Mermaid · narzędzia AI do przeglądu, testów i dokumentacji
 
 ## Autor
 
